@@ -1,73 +1,72 @@
 /**
  *
- * @file RedBlackTree.cpp
+ * @file RedBlackNode.cpp
  *
- * @brief Red-black tree class implementation.
+ * @brief Red-black node class implementation.
  *
  * @author Josh Wiley
  *
- * @details Implements the RedBlackTree class.
+ * @details Implements the RedBlackNode class.
  *
  */
 //
 //  Preprocessor Directives  ///////////////////////////////////////////////////
 //
-#ifndef RED_BLACK_TREE_CPP_
-#define RED_BLACK_TREE_CPP_
+#ifndef RED_BLACK_NODE_CPP_
+#define RED_BLACK_NODE_CPP_
 //
 //  Header Files  //////////////////////////////////////////////////////////////
 //
-#include "RedBlackTree.h"
+#include "RedBlackNode.h"
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
 //
 /**
  *
- * @details Default initializes empty tree
+ * @details Default initializes empty (red) node
  *
  */
 template<typename T>
-RedBlackTree<T>::RedBlackTree(RedBlackTree* parent_ptr)
+RedBlackNode<T>::RedBlackNode(RedBlackNode* parent_ptr, bool is_red)
     : 
       parent_rawptr_(parent_ptr),
-      root_value_ptr_(nullptr),
-      left_tree_ptr_(nullptr),
-      right_tree_ptr_(nullptr) {}
+      value_ptr_(nullptr),
+      is_red_(is_red),
+      left_child_ptr_(nullptr),
+      right_child_ptr_(nullptr) {}
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
 //
 /**
  *
- * @details Copy-initializes tree
+ * @details Copy-initializes node
  *
  */
 template<typename T>
-RedBlackTree<T>::RedBlackTree(const RedBlackTree<T>& origin)
+RedBlackNode<T>::RedBlackNode(const RedBlackNode<T>& origin)
+    : parent_rawptr_(origin.parent_rawptr_), is_red_(origin.is_red_)
 {
-    // Copy-initialize parent pointer.
-    parent_rawptr_ = origin.parent_rawptr_;
-
     // Is empty?
     if (origin.empty())
     {
         // Default-initialize.
-        root_value_ptr_ = left_tree_ptr_ = right_tree_ptr_ = nullptr;
+        value_ptr_ = left_child_ptr_ = right_child_ptr_ = nullptr;
 
         // Abort.
         return;
     }
 
-    // Copy-initialize root.
-    root_value_ptr_ = std::make_shared< T >(*origin.root_value_ptr);
+    // Copy-initialize value.
+    value_ptr_ = std::make_shared< T >(*origin.value_ptr);
 
-    // Copy initialize left tree.
-    left_tree_ptr_ = std::make_shared< RedBlackTree< T > >( 
-        *origin.left_tree_ptr
+    // Copy initialize left sub-tree.
+    left_child_ptr_ = std::make_shared< RedBlackNode< T > >( 
+        *origin.left_child_ptr
     );
 
-    // Copy initialize right tree.
-    right_tree_ptr_ = std::make_shared< RedBlackTree< T > >( 
-        *origin.right_tree_ptr
+    // Copy initialize right sub-tree.
+    right_child_ptr_ = std::make_shared< RedBlackNode< T > >( 
+        *origin.right_child_ptr
     );
 }
 //
@@ -79,22 +78,22 @@ RedBlackTree<T>::RedBlackTree(const RedBlackTree<T>& origin)
  *
  */
 template<typename T>
-RedBlackTree<T>::~RedBlackTree() {}
+RedBlackNode<T>::~RedBlackNode() {}
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
 //
 /**
  *
- * @details Returns a boolean value indicating if the tree is empty
+ * @details Returns a boolean value indicating if the node is empty
  *
  * @return Boolean value indicating if the tree is empty
  *
  */
 template<typename T>
-bool RedBlackTree<T>::empty()
+bool RedBlackNode<T>::empty()
 {
     // Empty if no root.
-    return root_value_ptr_ == nullptr;
+    return value_ptr_ == nullptr;
 }
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
@@ -107,7 +106,7 @@ bool RedBlackTree<T>::empty()
  *
  */
 template<typename T>
-unsigned int RedBlackTree<T>::height()
+unsigned int RedBlackNode<T>::height()
 {
     // Empty?
     if (empty())
@@ -118,8 +117,8 @@ unsigned int RedBlackTree<T>::height()
 
     // Return.
     return 1 + std::max(
-        left_tree_ptr_->height(),
-        right_tree_ptr_->height()
+        left_child_ptr_->height(),
+        right_child_ptr_->height()
     );
 }
 //
@@ -133,7 +132,7 @@ unsigned int RedBlackTree<T>::height()
  *
  */
 template<typename T>
-unsigned int RedBlackTree<T>::total_nodes()
+unsigned int RedBlackNode<T>::total_nodes()
 {
     // Empty?
     if (empty())
@@ -143,23 +142,23 @@ unsigned int RedBlackTree<T>::total_nodes()
     }
 
     // Return.
-    return 1 + left_tree_ptr_->total_nodes() + right_tree_ptr_->total_nodes();
+    return 1 + left_child_ptr_->total_nodes() + right_child_ptr_->total_nodes();
 }
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
 //
 /**
  *
- * @details Returns the value of the root node
+ * @details Returns the value of the node
  *
- * @return Returns the value of the root node
+ * @return Returns the value of the node
  *
  */
 template<typename T>
-T RedBlackTree<T>::root_value()
+T RedBlackNode<T>::value()
 {
     // Return root value.
-    return *root_value_ptr_;
+    return *value_ptr_;
 }
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
@@ -170,12 +169,12 @@ T RedBlackTree<T>::root_value()
  *
  */
 template<typename T>
-void RedBlackTree<T>::clear()
+void RedBlackNode<T>::clear()
 {
     // Reset all pointers.
-    root_value_ptr_ = nullptr;
-    left_tree_ptr_ = nullptr;
-    right_tree_ptr_ = nullptr;
+    value_ptr_ = nullptr;
+    left_child_ptr_ = nullptr;
+    right_child_ptr_ = nullptr;
 }
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
@@ -192,10 +191,10 @@ void RedBlackTree<T>::clear()
  *
  */
 template<typename T>
-bool RedBlackTree<T>::contains(T key)
+bool RedBlackNode<T>::contains(T key)
 {
     // Return search result.
-    return fetch_node(key) != nullptr;
+    return fetch_descendant(key) != nullptr;
 }
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
@@ -210,7 +209,7 @@ bool RedBlackTree<T>::contains(T key)
  *
  */
 template<typename T>
-void RedBlackTree<T>::each_preorder(std::function< void(std::shared_ptr<T>) > iteratee)
+void RedBlackNode<T>::each_preorder(std::function< void(std::shared_ptr<T>) > iteratee)
 {
     // Empty?
     if (empty())
@@ -219,12 +218,12 @@ void RedBlackTree<T>::each_preorder(std::function< void(std::shared_ptr<T>) > it
         return;
     }
 
-    // Process root.
-    iteratee(root_value_ptr_);
+    // Process.
+    iteratee(value_ptr_);
 
     // Forward.
-    left_tree_ptr_->each_preorder(iteratee);
-    right_tree_ptr_->each_preorder(iteratee);
+    left_child_ptr_->each_preorder(iteratee);
+    right_child_ptr_->each_preorder(iteratee);
 }
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
@@ -239,7 +238,7 @@ void RedBlackTree<T>::each_preorder(std::function< void(std::shared_ptr<T>) > it
  *
  */
 template<typename T>
-void RedBlackTree<T>::each_inorder(std::function< void(std::shared_ptr<T>) > iteratee)
+void RedBlackNode<T>::each_inorder(std::function< void(std::shared_ptr<T>) > iteratee)
 {
     // Empty?
     if (empty())
@@ -249,13 +248,13 @@ void RedBlackTree<T>::each_inorder(std::function< void(std::shared_ptr<T>) > ite
     }
 
     // Forward.
-    left_tree_ptr_->each_inorder(iteratee);
+    left_child_ptr_->each_inorder(iteratee);
 
-    // Process root.
-    iteratee(root_value_ptr_);
+    // Process.
+    iteratee(value_ptr_);
 
-    // Forward
-    right_tree_ptr_->each_inorder(iteratee);
+    // Forward.
+    right_child_ptr_->each_inorder(iteratee);
 }
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
@@ -270,7 +269,7 @@ void RedBlackTree<T>::each_inorder(std::function< void(std::shared_ptr<T>) > ite
  *
  */
 template<typename T>
-void RedBlackTree<T>::each_postorder(std::function< void(std::shared_ptr<T>) > iteratee)
+void RedBlackNode<T>::each_postorder(std::function< void(std::shared_ptr<T>) > iteratee)
 {
     // Empty?
     if (empty())
@@ -280,11 +279,11 @@ void RedBlackTree<T>::each_postorder(std::function< void(std::shared_ptr<T>) > i
     }
 
     // Forward.
-    left_tree_ptr_->each_postorder(iteratee);
-    right_tree_ptr_->each_postorder(iteratee);
+    left_child_ptr_->each_postorder(iteratee);
+    right_child_ptr_->each_postorder(iteratee);
 
-    // Process root.
-    iteratee(root_value_ptr_);
+    // Process.
+    iteratee(value_ptr_);
 }
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
@@ -292,39 +291,40 @@ void RedBlackTree<T>::each_postorder(std::function< void(std::shared_ptr<T>) > i
 /**
  *
  * @details Adds item with the value of the key parameter to the correct
- *          position in the tree.
+ *          position in the tree and restructures/repaints the tree to maintain
+ *          balance.
  *
  * @param[in] key
  *            Item to add to tree.
  *
  */
 template<typename T>
-bool RedBlackTree<T>::add(const T& key)
+bool RedBlackNode<T>::add(const T& key)
 {
     // Empty?
     if (empty())
     {
-        // Add as root.
-        root_value_ptr_.reset(new T(key));
+        // Add node.
+        value_ptr_.reset(new T(key));
 
-        // Default-initialize sub-trees.
-        left_tree_ptr_.reset(new RedBlackTree< T >(this));
-        right_tree_ptr_.reset(new RedBlackTree< T >(this));
+        // Default-initialize child nodes.
+        left_child_ptr_.reset(new RedBlackNode< T >(this));
+        right_child_ptr_.reset(new RedBlackNode< T >(this));
 
         // Return success.
         return true;
     }
-    // Left tree?
-    else if (key <= *root_value_ptr_)
+    // Left sub-tree?
+    else if (key <= *value_ptr_)
     {
         // Add left.
-        return left_tree_ptr_->add(key);
+        return left_child_ptr_->add(key);
     }
-    // Right tree.
+    // Right sub-tree.
     else
     {
         // Add right.
-        return right_tree_ptr_->add(key);
+        return right_child_ptr_->add(key);
     }
 }
 //
@@ -333,13 +333,14 @@ bool RedBlackTree<T>::add(const T& key)
 /**
  *
  * @details Removes item specified by the value of key from the tree.
+ *          (TODO: IMPLEMENT)
  *
  * @param[in] key
  *            Item to remove from the tree.
  *
  */
 template<typename T>
-bool RedBlackTree<T>::remove(const T& key) {}
+bool RedBlackNode<T>::remove(const T& key) {}
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
 //
@@ -353,7 +354,7 @@ bool RedBlackTree<T>::remove(const T& key) {}
  *
  */
 template<typename T>
-RedBlackTree< T >* RedBlackTree<T>::fetch_node(T key)
+std::shared_ptr< RedBlackNode< T > > RedBlackNode<T>::fetch_descendant(T key)
 {
     // Is empty or equal?
     if (empty())
@@ -361,26 +362,26 @@ RedBlackTree< T >* RedBlackTree<T>::fetch_node(T key)
         // No match.
         return nullptr;
     }
-    else if (key == *root_value_ptr_)
+    else if (key == *value_ptr_)
     {
         // Return this.
         return this;
     }
     // Is in left tree?
-    else if (key < *root_value_ptr_)
+    else if (key < *value_ptr_)
     {
         // Return result from left tree.
-        return left_tree_ptr_->fetch_node(key);
+        return left_child_ptr_->value() == key ? left_child_ptr_->value() : left_child_ptr_->fetch_descendant(key);
     }
     // In right tree.
     else
     {
         // Return result from right tree.
-        return right_tree_ptr_->fetch_node(key);
+        return right_child_ptr_->value() == key ? right_child_ptr_->value() : right_child_ptr_->fetch_descendant(key);
     }
 }
 //
 //  Terminating Precompiler Directives  ////////////////////////////////////////
 //
-#endif // RED_BLACK_TREE_CPP_
+#endif // RED_BLACK_NODE_CPP_
 //

@@ -25,14 +25,14 @@
 #include <memory>
 #include <algorithm>
 #include "utils/data_generator.h"
-#include "RedBlackTree/RedBlackTree.h"
+#include "RedBlackNode/RedBlackNode.h"
 //
 //  Main Function Implementation  //////////////////////////////////////////////
 //
 int main()
 {
     // Red-black tree.
-    auto rbt_ptr = std::make_shared< RedBlackTree< unsigned int > >();
+    auto rbt_root_ptr = std::make_shared< RedBlackNode< unsigned int > >();
 
     // Test data.
     auto data_set_ptr = std::shared_ptr< std::list< unsigned int > >(
@@ -48,27 +48,27 @@ int main()
     );
 
     // Build tree.
-    std::for_each(data_set_ptr->begin(), data_set_ptr->end(), [rbt_ptr] (auto i)
+    std::for_each(data_set_ptr->begin(), data_set_ptr->end(), [rbt_root_ptr] (auto i)
     {
         // Add item.
-        rbt_ptr->add(i);
+        rbt_root_ptr->add(i);
     });
 
     // Display height.
-    std::cout << "\n\nRBT height: " << rbt_ptr->height();
+    std::cout << "\n\nRBT height: " << rbt_root_ptr->height();
 
     // Display in-order output.
     std::cout << "\n\nRBT in-order:\n";
-    rbt_ptr->each_inorder([] (auto i) { std::cout << *i << ' '; });
+    rbt_root_ptr->each_inorder([] (auto i) { std::cout << *i << ' '; });
 
     // Display empty state.
-    std::cout << "\n\nRBT empty state: " << rbt_ptr->empty();
+    std::cout << "\n\nRBT empty state: " << rbt_root_ptr->empty();
 
     // Clear.
-    rbt_ptr->clear();
+    rbt_root_ptr->clear();
 
     // Display empty state (again).
-    std::cout << "\n\nRBT empty state: " << rbt_ptr->empty();
+    std::cout << "\n\nRBT empty state: " << rbt_root_ptr->empty();
 
     // Padding and flush stream.
     std::cout << '\n' << std::endl;
