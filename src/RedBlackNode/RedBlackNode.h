@@ -44,8 +44,6 @@ public:
     bool add(const T&); /**< Adds item to correct place in tree (where this node is the root) and returns boolean value indicating success */
     bool remove(const T&); /**< Removes value from tree and returns boolean value indicating success */
 
-    bool is_red() const; /**< Returns boolean value indicating whether the node is red. */
-
 // Private members.
 private:
     RedBlackNode< T >* parent_rawptr_; /**< Smart pointer to parent. */
@@ -55,7 +53,8 @@ private:
     std::shared_ptr< RedBlackNode< T > > right_child_ptr_; /**< Smart pointer to the right child */
 
     std::shared_ptr< RedBlackNode< T > > fetch_descendant(T); /**< Search for child node with given value and return pointer to node */
-    bool toggle_color(); /**< Toggles the color of the root item. */
+    bool is_red() const; /**< Returns boolean value indicating whether the node is red. */
+    void toggle_color(); /**< Toggles the color of the root item. */
 };
 //
 //  Implementation Files  //////////////////////////////////////////////////////

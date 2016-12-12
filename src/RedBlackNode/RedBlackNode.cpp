@@ -301,6 +301,9 @@ void RedBlackNode<T>::each_postorder(std::function< void(std::shared_ptr<T>) > i
 template<typename T>
 bool RedBlackNode<T>::add(const T& key)
 {
+    // Should split?
+    if (!is_red_() && left_child_ptr_->is_red() && right_child_ptr_->is_red())
+
     // Empty?
     if (empty())
     {
@@ -379,6 +382,36 @@ std::shared_ptr< RedBlackNode< T > > RedBlackNode<T>::fetch_descendant(T key)
         // Return result from right tree.
         return right_child_ptr_->value() == key ? right_child_ptr_->value() : right_child_ptr_->fetch_descendant(key);
     }
+}
+//
+//  Class Member Implementation  ///////////////////////////////////////////////
+//
+/**
+ *
+ * @details Returns a boolean value indicating whether or not the node is red.
+ *
+ * @return Boolean value indicating whether or not the node is red.
+ *
+ */
+template<typename T>
+bool RedBlackNode<T>::is_red() const
+{
+    // Return flag.
+    return is_red_;
+}
+//
+//  Class Member Implementation  ///////////////////////////////////////////////
+//
+/**
+ *
+ * @details Toggles color of node.
+ *
+ */
+template<typename T>
+void RedBlackNode<T>::toggle_color()
+{
+    // Toggle color.
+    is_red_ = !is_red_;
 }
 //
 //  Terminating Precompiler Directives  ////////////////////////////////////////
