@@ -20,6 +20,7 @@
 #include <memory>
 #include <algorithm>
 #include <functional>
+#include <iostream> // TODO: REMOVE
 //
 //  Class Definition  //////////////////////////////////////////////////////////
 //
@@ -28,7 +29,7 @@ class RedBlackNode
 {
 // Public members.
 public:
-    RedBlackNode(RedBlackNode* parent_ptr = nullptr, bool is_red = true); /**< Default constructor */
+    RedBlackNode(RedBlackNode* parent_ptr = nullptr, bool is_red = false); /**< Default constructor */
     RedBlackNode(const RedBlackNode<T>&); /**< Copy constructor */
     ~RedBlackNode(); /**< Destructor */
 
@@ -55,6 +56,7 @@ private:
     std::shared_ptr< RedBlackNode< T > > fetch_descendant(T); /**< Search for child node with given value and return pointer to node */
     bool is_red() const; /**< Returns boolean value indicating whether the node is red. */
     void toggle_color(); /**< Toggles the color of the root item. */
+    void fixup(); /**< Re-balances the tree initiated from this node */
 };
 //
 //  Implementation Files  //////////////////////////////////////////////////////

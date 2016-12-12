@@ -15,7 +15,7 @@
 //
 #ifndef PA07_CPP_
 #define PA07_CPP_
-#define DATA_SET_SIZE 1000
+#define DATA_SET_SIZE 10 // TODO: SET TO 1000
 #define DATA_SET_MIN 1
 #define DATA_SET_MAX 10000
 //

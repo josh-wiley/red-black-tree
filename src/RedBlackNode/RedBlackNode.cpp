@@ -301,9 +301,6 @@ void RedBlackNode<T>::each_postorder(std::function< void(std::shared_ptr<T>) > i
 template<typename T>
 bool RedBlackNode<T>::add(const T& key)
 {
-    // Should split?
-    if (!is_red_() && left_child_ptr_->is_red() && right_child_ptr_->is_red())
-
     // Empty?
     if (empty())
     {
@@ -311,18 +308,38 @@ bool RedBlackNode<T>::add(const T& key)
         value_ptr_.reset(new T(key));
 
         // Default-initialize child nodes.
-        left_child_ptr_.reset(new RedBlackNode< T >(this));
-        right_child_ptr_.reset(new RedBlackNode< T >(this));
+        left_child_ptr_.reset(new RedBlackNode< T >(this, false));
+        right_child_ptr_.reset(new RedBlackNode< T >(this, false));
+
+        // Fix-up.
+        fixup();
 
         // Return success.
         return true;
     }
+
+    // 4-node?
+    else if (
+        // Black node.
+        !is_red_() &&
+
+        // Left child is red.
+        (left_child_ptr_ != nullptr && left_child_ptr_->is_red()) &&
+
+        // Right child is red.
+        (right_child_ptr_ != nullptr && right_child_ptr_->is_red()))
+    {
+        // Fix-up.
+        fixup();
+    }
+
     // Left sub-tree?
     else if (key <= *value_ptr_)
     {
         // Add left.
         return left_child_ptr_->add(key);
     }
+    
     // Right sub-tree.
     else
     {
@@ -412,6 +429,39 @@ void RedBlackNode<T>::toggle_color()
 {
     // Toggle color.
     is_red_ = !is_red_;
+}
+//
+//  Class Member Implementation  ///////////////////////////////////////////////
+//
+/**
+ *
+ * @details Balances tree (after recolor).
+ *
+ */
+template<typename T>
+void RedBlackNode<T>::rotate()
+{
+    // Root?
+    if (parent_rawptr_ == nullptr)
+    {
+        // TODO: IMPLEMENT
+    }
+
+    // Base case.
+    if (
+        // Parent is 3-node?
+        (parent_rawptr_->left_child_ptr_->is_red() || parent_rawptr_->right_child_ptr_->is_red())
+    )
+    {
+        // Done.
+        return;
+    }
+
+    // Parent is 4-node.
+    else
+    {
+        // Rotate.
+    }
 }
 //
 //  Terminating Precompiler Directives  ////////////////////////////////////////
