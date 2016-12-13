@@ -358,7 +358,7 @@ bool RedBlackNode<T>::add(const T& key)
  *
  */
 template<typename T>
-bool RedBlackNode<T>::remove(const T& key) {}
+bool RedBlackNode<T>::remove(const T& key) { return false; }
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
 //
@@ -522,7 +522,7 @@ void RedBlackNode<T>::rotate_left()
     // Parent becomes (left) child.
     parent_rawptr_->parent_rawptr_ = this;
     std::cout << "\n\nConstructing new shared pointer from parent into left child...\n\n"; // TODO: REMOVE
-    left_child_ptr_ = std::make_shared< RedBlackNode< T > >(parent_rawptr_);
+    left_child_ptr_.reset(parent_rawptr_);
 
     // TODO: REMOVE
     std::cout << "\n\nSetting parent to old grandparent...\n\n";
@@ -552,7 +552,7 @@ void RedBlackNode<T>::rotate_right()
     // Parent becomes (right) child.
     parent_rawptr_->parent_rawptr_ = this;
     std::cout << "\n\nConstructing new shared pointer from parent into left child...\n\n"; // TODO: REMOVE
-    right_child_ptr_ = std::make_shared< RedBlackNode< T > >(parent_rawptr_);
+    right_child_ptr_.reset(parent_rawptr_);
 
     // TODO: REMOVE
     std::cout << "\n\nSetting parent to old grandparent...\n\n";
