@@ -50,6 +50,8 @@ int main()
     // Build tree.
     std::for_each(data_set_ptr->begin(), data_set_ptr->end(), [rbt_root_ptr] (auto i)
     {
+        // TODO: REMOVE
+        std::cout << "\n\nAdding " << i << "...\n\n";
         // Add item.
         rbt_root_ptr->add(i);
     });

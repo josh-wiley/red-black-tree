@@ -33,7 +33,7 @@ public:
     RedBlackNode(const RedBlackNode<T>&); /**< Copy constructor */
     ~RedBlackNode(); /**< Destructor */
 
-    bool empty(); /**< Returns boolean indicating whether the node is empty or not */
+    bool empty() const; /**< Returns boolean indicating whether the node is empty or not */
     unsigned int height(); /**< Returns height of tree from which this node is the root */
     unsigned int total_nodes(); /**< Returns the total number of nodes in the tree in which this node is the root */
     T value(); /**< Returns value of node */
@@ -57,6 +57,8 @@ private:
     bool is_red() const; /**< Returns boolean value indicating whether the node is red. */
     void toggle_color(); /**< Toggles the color of the root item. */
     void fixup(); /**< Re-balances the tree initiated from this node */
+    void rotate_left(); /**< Rotates left with this node as the pivot */
+    void rotate_right(); /**< Rotates right with this node as the pivot */
 };
 //
 //  Implementation Files  //////////////////////////////////////////////////////
