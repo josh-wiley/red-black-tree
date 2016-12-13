@@ -52,6 +52,7 @@ int main()
     {
         // TODO: REMOVE
         std::cout << "\n\nAdding " << i << "...\n\n";
+        
         // Add item.
         rbt_root_ptr->add(i);
     });

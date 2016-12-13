@@ -403,47 +403,17 @@ std::shared_ptr< RedBlackNode< T > > RedBlackNode<T>::fetch_descendant(T key)
 //
 /**
  *
- * @details Returns a boolean value indicating whether or not the node is red.
- *
- * @return Boolean value indicating whether or not the node is red.
- *
- */
-template<typename T>
-bool RedBlackNode<T>::is_red() const
-{
-    // Return flag.
-    return is_red_;
-}
-//
-//  Class Member Implementation  ///////////////////////////////////////////////
-//
-/**
- *
- * @details Toggles color of node.
- *
- */
-template<typename T>
-void RedBlackNode<T>::toggle_color()
-{
-    // Toggle color.
-    is_red_ = !is_red_;
-}
-//
-//  Class Member Implementation  ///////////////////////////////////////////////
-//
-/**
- *
  * @details Balances tree (after recolor).
  *
  */
 template<typename T>
 void RedBlackNode<T>::fixup()
 {
-    // Red root?
-    if (parent_rawptr_ == nullptr && is_red_)
+    // Root?
+    if (parent_rawptr_ == nullptr)
     {
         // TODO: REMOVE
-        std::cout << "\n\nRed root. Painting black...\n\n";
+        std::cout << "\n\nRoot. Painting black...\n\n";
 
         // Make black.
         is_red_ = false;
@@ -461,6 +431,9 @@ void RedBlackNode<T>::fixup()
         // Get uncle.
         auto uncle_ptr = grandparent_rawptr->left_child_ptr_.get() == grandparent_rawptr ? grandparent_rawptr->right_child_ptr_ : grandparent_rawptr->left_child_ptr_;
 
+        // TODO: REMOVE
+        std::cout << "\n\nGot grandparent and uncle pointers...\n\n";
+
         // Has uncle?
         if (uncle_ptr != nullptr)
         {
@@ -471,8 +444,9 @@ void RedBlackNode<T>::fixup()
                 std::cout << "\n\nCase #1: Red uncle\n\n";
 
                 // Push "red" violation up the tree.
-                parent_rawptr_->toggle_color();
-                uncle_ptr->toggle_color();
+                parent_rawptr_->is_red_ = false;
+                uncle_ptr->is_red_ = false;
+                grandparent_rawptr->is_red_ = true;
 
                 // Fixup at grandparent.
                 grandparent_rawptr->fixup();
@@ -488,8 +462,8 @@ void RedBlackNode<T>::fixup()
                     std::cout << "\n\nCase #2: Left child with black uncle\n\n";
 
                     // Color parent black and grandparent red.
-                    parent_rawptr_->toggle_color();
-                    grandparent_rawptr->toggle_color();
+                    parent_rawptr_->is_red_ = false;
+                    grandparent_rawptr->is_red_ = true;
 
                     // TODO: REMOVE
                     std::cout << "\n\nRotating parent right...\n\n";
@@ -506,19 +480,15 @@ void RedBlackNode<T>::fixup()
                 {
                     // TODO: REMOVE
                     std::cout << "\n\nCase #3: Right child with black uncle\n\n";
-
-                    // TODO: REMOVE
                     std::cout << "\n\nRotating left...\n\n";
 
                     // Left-rotate about this node.
                     rotate_left();
 
-                    // TODO: REMOVE
-                    std::cout << "\n\nFinished rotating...\n\n";
-
                     // Fix as if left child with black uncle.
-                    parent_rawptr_->toggle_color();
-                    grandparent_rawptr->toggle_color();
+                    parent_rawptr_->is_red_ = false;
+                    grandparent_rawptr->is_red_ = true;
+                    std::cout << "\n\nRotating parent right...\n\n"; // TODO: REMOVE
                     parent_rawptr_->rotate_right();
                 }
             }
@@ -540,15 +510,22 @@ void RedBlackNode<T>::fixup()
 template<typename T>
 void RedBlackNode<T>::rotate_left()
 {
-    // Parent adopts (left) child.
-    parent_rawptr_->right_child_ptr_ = left_child_ptr_;
-
     // Save grandparent.
     auto grandparent_rawptr = parent_rawptr_->parent_rawptr_;
 
+    // Parent adopts (left) child.
+    parent_rawptr_->right_child_ptr_ = left_child_ptr_;
+
+    // TODO: REMOVE
+    std::cout << "\n\nBecoming the parent of the parent...\n\n";
+
     // Parent becomes (left) child.
-    left_child_ptr_.reset(parent_rawptr_);
-    left_child_ptr_->parent_rawptr_ = this;
+    parent_rawptr_->parent_rawptr_ = this;
+    std::cout << "\n\nConstructing new shared pointer from parent into left child...\n\n"; // TODO: REMOVE
+    left_child_ptr_ = std::make_shared< RedBlackNode< T > >(parent_rawptr_);
+
+    // TODO: REMOVE
+    std::cout << "\n\nSetting parent to old grandparent...\n\n";
 
     // Adopted by grandparent.
     parent_rawptr_ = grandparent_rawptr;
@@ -563,15 +540,22 @@ void RedBlackNode<T>::rotate_left()
 template<typename T>
 void RedBlackNode<T>::rotate_right()
 {
-    // Parent adopts (right) child.
-    parent_rawptr_->left_child_ptr_ = right_child_ptr_;
-
     // Save grandparent.
     auto grandparent_rawptr = parent_rawptr_->parent_rawptr_;
 
+    // Parent adopts (right) child.
+    parent_rawptr_->left_child_ptr_ = right_child_ptr_;
+
+    // TODO: REMOVE
+    std::cout << "\n\nBecoming the parent of the parent...\n\n";
+
     // Parent becomes (right) child.
-    right_child_ptr_.reset(parent_rawptr_);;
-    right_child_ptr_->parent_rawptr_ = this;
+    parent_rawptr_->parent_rawptr_ = this;
+    std::cout << "\n\nConstructing new shared pointer from parent into left child...\n\n"; // TODO: REMOVE
+    right_child_ptr_ = std::make_shared< RedBlackNode< T > >(parent_rawptr_);
+
+    // TODO: REMOVE
+    std::cout << "\n\nSetting parent to old grandparent...\n\n";
 
     // Adopted by grandparent.
     parent_rawptr_ = grandparent_rawptr;

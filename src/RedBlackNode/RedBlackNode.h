@@ -54,8 +54,6 @@ private:
     std::shared_ptr< RedBlackNode< T > > right_child_ptr_; /**< Smart pointer to the right child */
 
     std::shared_ptr< RedBlackNode< T > > fetch_descendant(T); /**< Search for child node with given value and return pointer to node */
-    bool is_red() const; /**< Returns boolean value indicating whether the node is red. */
-    void toggle_color(); /**< Toggles the color of the root item. */
     void fixup(); /**< Re-balances the tree initiated from this node */
     void rotate_left(); /**< Rotates left with this node as the pivot */
     void rotate_right(); /**< Rotates right with this node as the pivot */
