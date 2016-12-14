@@ -34,9 +34,10 @@ public:
     ~RedBlackNode(); /**< Destructor */
 
     bool empty() const; /**< Returns boolean indicating whether the node is empty or not */
+    RedBlackNode< T >* parent() const; /**< Getter method for raw pointer to parent */
     unsigned int height(); /**< Returns height of tree from which this node is the root */
     unsigned int total_nodes(); /**< Returns the total number of nodes in the tree in which this node is the root */
-    T value(); /**< Returns value of node */
+    T value() const; /**< Returns value of node */
     void clear(); /**< Clears node and all sub-trees. */
     bool contains(T); /**< Check if the value exists in the tree where this node is the root */
     void each_preorder(std::function< void(std::shared_ptr<T>) >); /**< Executes provided function on each item in pre-order. */

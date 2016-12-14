@@ -47,15 +47,33 @@ int main()
         data_set_ptr
     );
 
+    // Iterators.
+    auto cursor_it = data_set_ptr->begin();
+    auto end_it = data_set_ptr->end();
+
     // Build tree.
-    std::for_each(data_set_ptr->begin(), data_set_ptr->end(), [rbt_root_ptr] (auto i)
+    while(cursor_it != end_it)
     {
         // TODO: REMOVE
-        std::cout << "\n\nAdding " << i << "...\n\n";
+        std::cout << "\n\nAdding " << *cursor_it << " at root node with value " << rbt_root_ptr->value() << "...\n\n";
         
-        // Add item.
-        rbt_root_ptr->add(i);
-    });
+        // Add item and update.
+        rbt_root_ptr->add(*cursor_it);
+
+        // Root fell?
+        if (rbt_root_ptr->parent())
+        {
+            // TODO: REMOVE
+            std::cout << "\n\nUpdating root node pointer to " << rbt_root_ptr->parent()->value() << "...\n\n";
+
+
+            // Update.
+            rbt_root_ptr = std::make_shared< RedBlackNode< unsigned int > >(*(rbt_root_ptr->parent()));
+        }
+
+        // Advance.
+        ++cursor_it;
+    }
 
     // Display height.
     std::cout << "\n\nRBT height: " << rbt_root_ptr->height();
