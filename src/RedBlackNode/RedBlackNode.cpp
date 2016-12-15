@@ -503,24 +503,73 @@ template<typename T>
 void RedBlackNode<T>::rotate_left()
 {
     // Save grandparent.
-    auto grandparent_rawptr = parent_rawptr_->parent_rawptr_;
+    auto grandparent_rawptr = (parent_rawptr_->parent_rawptr_);
+
+    // TODO: REMOVE
+    std::cout << "\n\nGot grandparent: " << (grandparent_rawptr != nullptr ? grandparent_rawptr->value() : T()) << "\n\n";
 
     // Is parent left child?
     auto is_parent_left_child = grandparent_rawptr != nullptr && grandparent_rawptr->left_child_ptr_.get() == parent_rawptr_;
 
+    // TODO: REMOVE
+    std::cout << "\n\nParent is " << (is_parent_left_child ? "left" : "right") << "child\n\n";
+
+    // TODO: REMOVE
+    std::cout << "\n\nBefore left rotation.\n"
+                << "Value: " << value() << '\n';
+    if (left_child_ptr_)
+    {
+        std::cout << "Left child: " << left_child_ptr_->value() << '\n';
+    }
+    if (right_child_ptr_)
+    {
+        std::cout << "Right child: " << right_child_ptr_->value() << '\n';
+    }
+    if (parent())
+    {
+        std::cout << "Parent: " << parent()->value() << '\n';
+
+        if (parent()->left_child_ptr_)
+        {
+            std::cout << "Parent left child: " << parent()->left_child_ptr_->value() << '\n';
+        }
+        if (parent()->right_child_ptr_)
+        {
+            std::cout << "Parent right child: " << parent()->right_child_ptr_->value() << '\n';
+        }
+    }
+    if (grandparent_rawptr != nullptr)
+    {
+        std::cout << "Grandparent: " << grandparent_rawptr->value() << '\n';
+
+        if (grandparent_rawptr->left_child_ptr_)
+        {
+            std::cout << "Grandparent left child: " << grandparent_rawptr->left_child_ptr_->value() << '\n';
+        }
+        if (grandparent_rawptr->right_child_ptr_)
+        {
+            std::cout << "Grandparent right child: " << grandparent_rawptr->right_child_ptr_->value() << '\n';
+        }
+        
+    }
+    std::cout << '\n';
+
+    // TODO: REMOVE
+    std::cout << "\n\nakagami_distribution";
+
     // Parent adopts (left) child.
-    (parent_rawptr_->right_child_ptr_) = left_child_ptr_;
+    parent_rawptr_->right_child_ptr_ = left_child_ptr_;
 
     // Has left child?
     if (left_child_ptr_)
     {
         // Link.
-        left_child_ptr_->parent_rawptr_ = parent_rawptr_->right_child_ptr_.get();
+        left_child_ptr_->parent_rawptr_ = (parent_rawptr_->right_child_ptr_.get());
     }
 
     // Parent becomes (left) child.
     left_child_ptr_ = std::make_shared< RedBlackNode< T > >(*parent_rawptr_);
-    parent_rawptr_ = left_child_ptr_->parent_rawptr_;
+    parent_rawptr_ = (left_child_ptr_->parent_rawptr_);
     left_child_ptr_->parent_rawptr_ = this;
 
     // Grandparent?
@@ -531,7 +580,7 @@ void RedBlackNode<T>::rotate_left()
     }
 
     // TODO: REMOVE
-    std::cout << "\n\nRotated left.\n"
+    std::cout << "\n\nAfter left rotation.\n"
                 << "Value: " << value() << '\n';
     if (left_child_ptr_)
     {
@@ -581,24 +630,64 @@ template<typename T>
 void RedBlackNode<T>::rotate_right()
 {
     // Save grandparent.
-    auto grandparent_rawptr = parent_rawptr_->parent_rawptr_;
+    auto grandparent_rawptr = (parent_rawptr_->parent_rawptr_);
 
     // Is parent left child?
     auto is_parent_left_child = grandparent_rawptr != nullptr && grandparent_rawptr->left_child_ptr_.get() == parent_rawptr_;
 
+    // TODO: REMOVE
+    std::cout << "\n\nBefore right rotation.\n"
+                << "Value: " << value() << '\n';
+    if (left_child_ptr_)
+    {
+        std::cout << "Left child: " << left_child_ptr_->value() << '\n';
+    }
+    if (right_child_ptr_)
+    {
+        std::cout << "Right child: " << right_child_ptr_->value() << '\n';
+    }
+    if (parent())
+    {
+        std::cout << "Parent: " << parent()->value() << '\n';
+
+        if (parent()->left_child_ptr_)
+        {
+            std::cout << "Parent left child: " << parent()->left_child_ptr_->value() << '\n';
+        }
+        if (parent()->right_child_ptr_)
+        {
+            std::cout << "Parent right child: " << parent()->right_child_ptr_->value() << '\n';
+        }
+    }
+    if (grandparent_rawptr != nullptr)
+    {
+        std::cout << "Grandparent: " << grandparent_rawptr->value() << '\n';
+
+        if (grandparent_rawptr->left_child_ptr_)
+        {
+            std::cout << "Grandparent left child: " << grandparent_rawptr->left_child_ptr_->value() << '\n';
+        }
+        if (grandparent_rawptr->right_child_ptr_)
+        {
+            std::cout << "Grandparent right child: " << grandparent_rawptr->right_child_ptr_->value() << '\n';
+        }
+        
+    }
+    std::cout << '\n';
+
     // Parent adopts (right) child.
-    (parent_rawptr_->left_child_ptr_) = right_child_ptr_;
+    parent_rawptr_->left_child_ptr_ = right_child_ptr_;
 
     // Has right child?
     if (right_child_ptr_)
     {
         // Link.
-        right_child_ptr_->parent_rawptr_ = parent_rawptr_->left_child_ptr_.get();
+        right_child_ptr_->parent_rawptr_ = (parent_rawptr_->left_child_ptr_.get());
     }
 
     // Parent becomes (right) child.
     right_child_ptr_ = std::make_shared< RedBlackNode< T > >(*parent_rawptr_);
-    parent_rawptr_ = right_child_ptr_->parent_rawptr_;
+    parent_rawptr_ = (right_child_ptr_->parent_rawptr_);
     right_child_ptr_->parent_rawptr_ = this;
 
     // Grandparent?
@@ -609,7 +698,7 @@ void RedBlackNode<T>::rotate_right()
     }
 
     // TODO: REMOVE
-    std::cout << "\n\nRotated right.\n"
+    std::cout << "\n\nAfter right rotation.\n"
                 << "Value: " << value() << '\n';
     if (left_child_ptr_)
     {
