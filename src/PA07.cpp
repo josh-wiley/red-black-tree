@@ -55,7 +55,7 @@ int main()
     while(cursor_it != end_it)
     {
         // TODO: REMOVE
-        std::cout << "\n\nAdding " << *cursor_it << " at root node with value " << rbt_root_ptr->value() << "...\n\n";
+        std::cout << "\n\nAdding new item. Root value is " << rbt_root_ptr->value() << "\n\n";
         
         // Add item and update.
         rbt_root_ptr->add(*cursor_it);
