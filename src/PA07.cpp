@@ -32,12 +32,10 @@
 int main()
 {
     // Red-black tree.
-    auto rbt_root_ptr = std::make_shared< RedBlackNode< unsigned int > >();
+    auto rbt_root_ptr = std::make_shared< RedBlackNode< unsigned int > >(nullptr, false);
 
     // Test data.
-    auto data_set_ptr = std::shared_ptr< std::list< unsigned int > >(
-        new std::list<unsigned int>()
-    );
+    auto data_set_ptr = std::make_shared< std::list< unsigned int > >();
 
     // Generate test data.
     data_generator::generate_random_data(
@@ -55,20 +53,23 @@ int main()
     while(cursor_it != end_it)
     {
         // TODO: REMOVE
-        std::cout << "\n\nAdding new item. Root value is " << rbt_root_ptr->value() << "\n\n";
+        std::cout << "\n\nAdding new item. Root value is "
+                  << (rbt_root_ptr->empty() ? 0 : rbt_root_ptr->value())
+                  << "\n\n";
         
         // Add item and update.
         rbt_root_ptr->add(*cursor_it);
 
         // Root fell?
-        if (rbt_root_ptr->parent())
+        if (rbt_root_ptr->is_root())
         {
             // TODO: REMOVE
-            std::cout << "\n\nUpdating root node pointer to " << rbt_root_ptr->parent()->value() << "...\n\n";
-
+            std::cout << "\n\nUpdating root node pointer to "
+                      << rbt_root_ptr->parent()->value()
+                      << "...\n\n";
 
             // Update.
-            rbt_root_ptr = std::make_shared< RedBlackNode< unsigned int > >(*(rbt_root_ptr->parent()));
+            rbt_root_ptr = rbt_root_ptr->parent();
         }
 
         // Advance.

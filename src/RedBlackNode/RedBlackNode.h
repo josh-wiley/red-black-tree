@@ -25,21 +25,22 @@
 //  Class Definition  //////////////////////////////////////////////////////////
 //
 template<class T>
-class RedBlackNode
+class RedBlackNode : public std::enable_shared_from_this<RedBlackNode <T> >
 {
 // Public members.
 public:
-    RedBlackNode(RedBlackNode* parent_ptr = nullptr, bool is_red = false); /**< Default constructor */
+    RedBlackNode(std::shared_ptr< RedBlackNode< T > > parent_ptr, bool is_red = false); /**< Default constructor */
     RedBlackNode(const RedBlackNode<T>&); /**< Copy constructor */
     ~RedBlackNode(); /**< Destructor */
 
     bool empty() const; /**< Returns boolean indicating whether the node is empty or not */
-    RedBlackNode< T >* parent() const; /**< Getter method for raw pointer to parent */
-    unsigned int height(); /**< Returns height of tree from which this node is the root */
-    unsigned int total_nodes(); /**< Returns the total number of nodes in the tree in which this node is the root */
+    bool is_root() const; /** Returns boolean value whether or not the node is the root */
+    std::shared_ptr< RedBlackNode< T > > parent() const; /**< Getter method for raw pointer to parent */
+    unsigned int height() const; /**< Returns height of tree from which this node is the root */
+    unsigned int total_nodes() const; /**< Returns the total number of nodes in the tree in which this node is the root */
     T value() const; /**< Returns value of node */
     void clear(); /**< Clears node and all sub-trees. */
-    bool contains(T); /**< Check if the value exists in the tree where this node is the root */
+    bool contains(T) const; /**< Check if the value exists in the tree where this node is the root */
     void each_preorder(std::function< void(std::shared_ptr<T>) >); /**< Executes provided function on each item in pre-order. */
     void each_inorder(std::function< void(std::shared_ptr<T>) >); /**< Executes provided function on each item in-order. */
     void each_postorder(std::function< void(std::shared_ptr<T>) >); /**< Executes provided function on each item in post-order. */
@@ -48,7 +49,7 @@ public:
 
 // Private members.
 private:
-    RedBlackNode< T >* parent_rawptr_; /**< Smart pointer to parent. */
+    std::shared_ptr< RedBlackNode< T > > parent_ptr_; /**< Smart pointer to parent. */
     std::shared_ptr< T > value_ptr_; /** Smart pointer to value of root node */
     bool is_red_; /**< Boolean value indicating whether the node is red. */
     std::shared_ptr< RedBlackNode< T > > left_child_ptr_; /**< Smart pointer to the left child */
