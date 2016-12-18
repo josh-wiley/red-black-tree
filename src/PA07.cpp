@@ -15,7 +15,7 @@
 //
 #ifndef PA07_CPP_
 #define PA07_CPP_
-#define DATA_SET_SIZE 10 // TODO: SET TO 1000
+#define DATA_SET_SIZE 1000
 #define DATA_SET_MIN 1
 #define DATA_SET_MAX 10000
 //
@@ -50,24 +50,14 @@ int main()
     auto end_it = data_set_ptr->end();
 
     // Build tree.
-    while(cursor_it != end_it)
-    {
-        // TODO: REMOVE
-        std::cout << "\n\nAdding new item. Root value is "
-                  << (rbt_root_ptr->empty() ? 0 : rbt_root_ptr->value())
-                  << "\n\n";
-        
+    while (cursor_it != end_it)
+    {   
         // Add item and update.
         rbt_root_ptr->add(*cursor_it);
 
         // Root fell?
         if (rbt_root_ptr->is_root())
         {
-            // TODO: REMOVE
-            std::cout << "\n\nUpdating root node pointer to "
-                      << rbt_root_ptr->parent()->value()
-                      << "...\n\n";
-
             // Update.
             rbt_root_ptr = rbt_root_ptr->parent();
         }
@@ -87,6 +77,7 @@ int main()
     std::cout << "\n\nRBT empty state: " << rbt_root_ptr->empty();
 
     // Clear.
+    std::cout << "\n\nClearing RBT...\n\n";
     rbt_root_ptr->clear();
 
     // Display empty state (again).

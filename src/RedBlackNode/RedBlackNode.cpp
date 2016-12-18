@@ -28,13 +28,11 @@
  */
 template<typename T>
 RedBlackNode<T>::RedBlackNode(std::shared_ptr< RedBlackNode< T > > parent_ptr, bool is_red)
-    : parent_ptr_(parent_ptr), is_red_(is_red)
-{
-    // Initialize smart pointers.
-    value_ptr_ = nullptr;
-    left_child_ptr_ = nullptr;
-    right_child_ptr_ = nullptr;
-}
+    : parent_ptr_(parent_ptr),
+      value_ptr_(nullptr),
+      is_red_(is_red),
+      left_child_ptr_(nullptr),
+      right_child_ptr_(nullptr) {}
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
 //
@@ -49,11 +47,7 @@ RedBlackNode<T>::RedBlackNode(const RedBlackNode<T>& origin)
       value_ptr_(origin.value_ptr_),
       is_red_(origin.is_red_),
       left_child_ptr_(origin.left_child_ptr_),
-      right_child_ptr_(origin.right_child_ptr_)
-    {
-        // TODO: REMOVE
-        std::cout << "\n\nCopy constructor..\n\n";
-    }
+      right_child_ptr_(origin.right_child_ptr_) {}
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
 //
@@ -95,7 +89,7 @@ template<typename T>
 bool RedBlackNode< T >::is_root() const
 {
     // Return boolean indicating whether or not the node has a parent.
-    return !parent_ptr_;
+    return (bool) parent_ptr_;
 }
 //
 //  Class Member Implementation  ///////////////////////////////////////////////
@@ -330,10 +324,7 @@ bool RedBlackNode<T>::add(const T& key)
 
         // Default-initialize child nodes.
         left_child_ptr_ = std::make_shared< RedBlackNode< T > >(this->shared_from_this(), false);
-        right_child_ptr_ = std::make_shared< RedBlackNode< T > >(this->shared_from_this(), false);  
-
-        // TODO: REMOVE
-        std::cout << "\n\nAdded. Fixing up...\n\n";
+        right_child_ptr_ = std::make_shared< RedBlackNode< T > >(this->shared_from_this(), false);
 
         // Fix-up.
         fixup();
@@ -345,9 +336,6 @@ bool RedBlackNode<T>::add(const T& key)
     // Left sub-tree?
     else if (key <= *value_ptr_)
     {
-        // TODO: REMOVE
-        std::cout << "Left\n";
-
         // Add left.
         return left_child_ptr_->add(key);
     }
@@ -355,9 +343,6 @@ bool RedBlackNode<T>::add(const T& key)
     // Right sub-tree.
     else
     {
-        // TODO: REMOVE
-        std::cout << "Right\n";
-
         // Add right.
         return right_child_ptr_->add(key);
     }
@@ -517,63 +502,20 @@ void RedBlackNode<T>::fixup()
 template<typename T>
 void RedBlackNode<T>::rotate_left()
 {
-    // TODO: REMOVE
-    std::cout << "\n\nRotating left...\n\n";
-
     // Save grandparent.
     auto grandparent_ptr = parent_ptr_->parent_ptr_;
 
     // Is parent left child?
     auto is_parent_left_child = grandparent_ptr && grandparent_ptr->left_child_ptr_ == parent_ptr_;
 
-    // TODO: REMOVE
-    std::cout << "This: " << value() << '\n'
-              << "Left child: " << (left_child_ptr_ ? left_child_ptr_->value() : T()) << "\n"
-              << "Right child: " << (right_child_ptr_ ? right_child_ptr_->value() : T()) << "\n\n";;
-    if (parent_ptr_ != nullptr)
-    {
-        std::cout << "Parent: " << parent_ptr_->value() << '\n'
-                  << "Parent left child: " << (parent_ptr_->left_child_ptr_ ? parent_ptr_->left_child_ptr_->value() : T()) << '\n'
-                  << "Parent right child: " << (parent_ptr_->right_child_ptr_ ? parent_ptr_->right_child_ptr_->value() : T()) << '\n';
-    }
-
-    // TODO: REMOVE
-    std::cout << "\n\nParent adopting left child as its right...\n\n";
-
     // Parent adopts (left) child as its right.
     parent_ptr_->right_child_ptr_ = left_child_ptr_;
     parent_ptr_->right_child_ptr_->parent_ptr_ = parent_ptr_;
-
-    // TODO: REMOVE
-    std::cout << "This: " << value() << '\n'
-              << "Left child: " << (left_child_ptr_ ? left_child_ptr_->value() : T()) << "\n"
-              << "Right child: " << (right_child_ptr_ ? right_child_ptr_->value() : T()) << "\n\n";;
-    if (parent_ptr_ != nullptr)
-    {
-        std::cout << "Parent: " << parent_ptr_->value() << '\n'
-                  << "Parent left child: " << (parent_ptr_->left_child_ptr_ ? parent_ptr_->left_child_ptr_->value() : T()) << '\n'
-                  << "Parent right child: " << (parent_ptr_->right_child_ptr_ ? parent_ptr_->right_child_ptr_->value() : T()) << '\n';
-    }
-
-    // TODO: REMOVE
-    std::cout << "\n\nAdopting parent as left child...\n\n";
 
     // Parent becomes (left) child.
     left_child_ptr_ = parent_ptr_;
     parent_ptr_ = grandparent_ptr;
     left_child_ptr_->parent_ptr_ = this->shared_from_this();
-
-    // TODO: REMOVE
-    std::cout << "\n\nAdopting parent as right child\n"
-              << "This: " << value() << '\n'
-              << "Left child: " << (left_child_ptr_ ? left_child_ptr_->value() : T()) << "\n"
-              << "Right child: " << (right_child_ptr_ ? right_child_ptr_->value() : T()) << "\n\n";;
-    if (parent_ptr_ != nullptr)
-    {
-        std::cout << "Parent: " << parent_ptr_->value() << '\n'
-                  << "Parent left child: " << (parent_ptr_->left_child_ptr_ ? parent_ptr_->left_child_ptr_->value() : T()) << '\n'
-                  << "Parent right child: " << (parent_ptr_->right_child_ptr_ ? parent_ptr_->right_child_ptr_->value() : T()) << '\n';
-    }
 
     // New parent?
     if (parent_ptr_)
@@ -581,9 +523,6 @@ void RedBlackNode<T>::rotate_left()
         // Bind granparent to new child.
         (is_parent_left_child ? parent_ptr_->left_child_ptr_ : parent_ptr_->right_child_ptr_) = this->shared_from_this();
     }
-
-    // TODO: REMOVE
-    std::cout << "\n\nUpdated parent pointer to this...\n\n";
 }
 //  Class Member Implementation  ///////////////////////////////////////////////
 //
@@ -595,63 +534,20 @@ void RedBlackNode<T>::rotate_left()
 template<typename T>
 void RedBlackNode<T>::rotate_right()
 {
-    // TODO: REMOVE
-    std::cout << "\n\nRotating right...\n\n";
-
     // Save grandparent.
     auto grandparent_ptr = parent_ptr_->parent_ptr_;
 
     // Is parent left child?
     auto is_parent_left_child = grandparent_ptr && grandparent_ptr->left_child_ptr_ == parent_ptr_;
 
-    // TODO: REMOVE
-    std::cout << "This: " << value() << '\n'
-              << "Left child: " << (left_child_ptr_ ? left_child_ptr_->value() : T()) << "\n"
-              << "Right child: " << (right_child_ptr_ ? right_child_ptr_->value() : T()) << "\n\n";;
-    if (parent_ptr_ != nullptr)
-    {
-        std::cout << "Parent: " << parent_ptr_->value() << '\n'
-                  << "Parent left child: " << (parent_ptr_->left_child_ptr_ ? parent_ptr_->left_child_ptr_->value() : T()) << '\n'
-                  << "Parent right child: " << (parent_ptr_->right_child_ptr_ ? parent_ptr_->right_child_ptr_->value() : T()) << '\n';
-    }
-
-    // TODO: REMOVE
-    std::cout << "\n\nParent adopting right child as its left...\n\n";
-
     // Parent adopts (right) child as its left.
     parent_ptr_->left_child_ptr_ = right_child_ptr_;
     parent_ptr_->left_child_ptr_->parent_ptr_ = parent_ptr_;
 
-    // TODO: REMOVE
-    std::cout << "This: " << value() << '\n'
-              << "Left child: " << (left_child_ptr_ ? left_child_ptr_->value() : T()) << "\n"
-              << "Right child: " << (right_child_ptr_ ? right_child_ptr_->value() : T()) << "\n\n";;
-    if (parent_ptr_ != nullptr)
-    {
-        std::cout << "Parent: " << parent_ptr_->value() << '\n'
-                  << "Parent left child: " << (parent_ptr_->left_child_ptr_ ? parent_ptr_->left_child_ptr_->value() : T()) << '\n'
-                  << "Parent right child: " << (parent_ptr_->right_child_ptr_ ? parent_ptr_->right_child_ptr_->value() : T()) << '\n';
-    }
-
-    // TODO: REMOVE
-    std::cout << "\n\nAdopting parent as right child...\n\n";
-
     // Parent becomes (right) child.
-    right_child_ptr_ = std::make_shared< RedBlackNode< T > >(*parent_ptr_);
+    right_child_ptr_ = parent_ptr_;
     parent_ptr_ = grandparent_ptr;
     right_child_ptr_->parent_ptr_ = this->shared_from_this();
-    
-
-    // TODO: REMOVE
-    std::cout << "This: " << value() << '\n'
-              << "Left child: " << (left_child_ptr_ ? left_child_ptr_->value() : T()) << "\n"
-              << "Right child: " << (right_child_ptr_ ? right_child_ptr_->value() : T()) << "\n\n";;
-    if (parent_ptr_ != nullptr)
-    {
-        std::cout << "Parent: " << parent_ptr_->value() << '\n'
-                  << "Parent left child: " << (parent_ptr_->left_child_ptr_ ? parent_ptr_->left_child_ptr_->value() : T()) << '\n'
-                  << "Parent right child: " << (parent_ptr_->right_child_ptr_ ? parent_ptr_->right_child_ptr_->value() : T()) << '\n';
-    }
 
     // New parent?
     if (parent_ptr_)
@@ -659,9 +555,6 @@ void RedBlackNode<T>::rotate_right()
         // Bind granparent to new child.
         (is_parent_left_child ? parent_ptr_->left_child_ptr_ : parent_ptr_->right_child_ptr_) = this->shared_from_this();
     }
-
-    // TODO: REMOVE
-    std::cout << "\n\nUpdated parent pointer to this...\n\n";
 }
 //
 //  Terminating Precompiler Directives  ////////////////////////////////////////

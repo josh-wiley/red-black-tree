@@ -20,7 +20,6 @@
 #include <memory>
 #include <algorithm>
 #include <functional>
-#include <iostream> // TODO: REMOVE
 //
 //  Class Definition  //////////////////////////////////////////////////////////
 //
