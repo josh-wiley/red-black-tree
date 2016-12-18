@@ -221,7 +221,7 @@ bool RedBlackNode<T>::contains(T key) const
  *
  */
 template<typename T>
-void RedBlackNode<T>::each_preorder(std::function< void(std::shared_ptr<T>) > iteratee)
+void RedBlackNode<T>::each_preorder(std::function< void(std::shared_ptr< T >) > iteratee)
 {
     // Empty?
     if (empty())
@@ -250,7 +250,7 @@ void RedBlackNode<T>::each_preorder(std::function< void(std::shared_ptr<T>) > it
  *
  */
 template<typename T>
-void RedBlackNode<T>::each_inorder(std::function< void(std::shared_ptr<T>) > iteratee)
+void RedBlackNode<T>::each_inorder(std::function< void(std::shared_ptr< T >) > iteratee)
 {
     // Empty?
     if (empty())
@@ -281,7 +281,7 @@ void RedBlackNode<T>::each_inorder(std::function< void(std::shared_ptr<T>) > ite
  *
  */
 template<typename T>
-void RedBlackNode<T>::each_postorder(std::function< void(std::shared_ptr<T>) > iteratee)
+void RedBlackNode<T>::each_postorder(std::function< void(std::shared_ptr< T >) > iteratee)
 {
     // Empty?
     if (empty())
@@ -414,9 +414,6 @@ void RedBlackNode<T>::fixup()
     // Root?
     if (!parent_ptr_)
     {
-        // TODO: REMOVE
-        std::cout << "\n\nCase #0: Root\n\n";
-
         // Make black.
         is_red_ = false;
     }
@@ -424,9 +421,6 @@ void RedBlackNode<T>::fixup()
     // "Red" violation (node and parent are both red).
     else if (is_red_ && parent_ptr_->is_red_)
     {
-        // TODO: REMOVE
-        std::cout << "\n\nRed violation\n\n";
-
         // Get grandparent.
         auto grandparent_ptr = parent_ptr_->parent_ptr_;
 
@@ -439,9 +433,6 @@ void RedBlackNode<T>::fixup()
         // Red uncle?
         if (uncle_ptr && uncle_ptr->is_red_)
         {
-            // TODO: REMOVE
-            std::cout << "\n\nCase #1: Red uncle\n\n";
-
             // Push "red" violation up the tree.
             parent_ptr_->is_red_ = false;
             uncle_ptr->is_red_ = false;
@@ -460,9 +451,6 @@ void RedBlackNode<T>::fixup()
                 (!is_left_child && grandparent_ptr->right_child_ptr_ == parent_ptr_)
             )
             {
-                // TODO: REMOVE
-                std::cout << "\n\nCase #3a: No/black uncle staggered outward\n\n";
-
                 // Color parent black and grandparent red.
                 parent_ptr_->is_red_ = false;
                 grandparent_ptr->is_red_ = true;
@@ -474,9 +462,6 @@ void RedBlackNode<T>::fixup()
             // Inner child.
             else
             {
-                // TODO: REMOVE
-                std::cout << "\n\nCase #3b: No/black uncle staggered inward\n\n";
-
                 // Rotate outward about this node.
                 is_left_child ? rotate_right() : rotate_left();
 

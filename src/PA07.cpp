@@ -69,15 +69,16 @@ int main()
     // Display height.
     std::cout << "\n\nRBT height: " << rbt_root_ptr->height();
 
-    // Display in-order output.
-    std::cout << "\n\nRBT in-order:\n";
-    rbt_root_ptr->each_inorder([] (auto i) { std::cout << *i << ' '; });
+    // Display sum.
+    auto sum_ptr = std::make_shared< long >(0);
+    rbt_root_ptr->each_inorder([sum_ptr] (auto i) { *sum_ptr += *i; });
+    std::cout << "\n\nRBT sum: " << *sum_ptr;
 
     // Display empty state.
     std::cout << "\n\nRBT empty state: " << rbt_root_ptr->empty();
 
     // Clear.
-    std::cout << "\n\nClearing RBT...\n\n";
+    std::cout << "\n\nClearing RBT...";
     rbt_root_ptr->clear();
 
     // Display empty state (again).
